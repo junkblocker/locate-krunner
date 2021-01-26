@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=Locate
+Comment=Locate KRunner written in Python
+X-KDE-ServiceTypes=Plasma/Runner
+Type=Service
+Icon=planetkde
+X-KDE-PluginInfo-Author=Manpreet Singh
+X-KDE-PluginInfo-Email=junkblocker@yahoo.com
+X-KDE-PluginInfo-Name=locate
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-License=LGPL
+X-KDE-PluginInfo-EnabledByDefault=true
+X-Plasma-API=DBus
+X-Plasma-DBusRunner-Service=org.kde.locate
+X-Plasma-DBusRunner-Path=/locate
