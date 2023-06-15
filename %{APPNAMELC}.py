@@ -3,6 +3,7 @@
 import re
 import subprocess
 from contextlib import suppress
+from pathlib import Path
 from typing import Any, List
 
 import dbus.service
@@ -37,7 +38,15 @@ class Runner(dbus.service.Object):
         if len(query) < 3:
             return results
 
-        find_cmd = ["/usr/bin/locate", "-l", "10"]
+        words = re.split(r'\s+', query)
+
+        self.locate = '/usr/bin/locate'
+        locate_config = Path("~/.config/locate-krunner").expanduser()
+        if locate_config.exists():
+            with locate_config.open() as conf:
+                for line in conf:
+                    self.locate = str(Path(line.rstrip()).expanduser())
+        find_cmd = [self.locate, "-l", "100"]
         find_cmd += re.split(r'\s+', query)
         # q(find_cmd)
         find_cmd_result = subprocess.run(find_cmd, capture_output=True, check=False)
@@ -45,19 +54,25 @@ class Runner(dbus.service.Object):
             # q(file)
             if file == '':
                 continue
+            fp = Path(file)
+            relevance = 1.0
+            for word in words:
+                if not word.startswith("-") and word not in fp.name:
+                    relevance -= 0.01
             results += [(
                 file,
                 file,
                 "document-open",
                 100,
-                1,
+                relevance,
                 {
                     "subtext":
                         file.rsplit('.', 1)[-1]  # extension
                 },
             )]
 
-        return results
+        results.sort(key=lambda x: x[4], reverse=True)
+        return results[:10]
 
     @dbus.service.method(IFACE, out_signature="a(sss)")
     def Actions(self):
