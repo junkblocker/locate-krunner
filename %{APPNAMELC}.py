@@ -4,7 +4,6 @@ import re
 import subprocess
 from contextlib import suppress
 from pathlib import Path
-from typing import Any, List
 
 import dbus.service
 # import q
@@ -33,7 +32,7 @@ class Runner(dbus.service.Object):
 
         # q(query)
         # Tried to use results as a dict itself but the {'subtext': line} portion is not hashable :/
-        results: List[Any] = []
+        results: list[tuple[str, str, str, int, float, dict[str, str]]] = []
 
         if len(query) < 3:
             return results
@@ -56,9 +55,15 @@ class Runner(dbus.service.Object):
                 continue
             fp = Path(file)
             relevance = 1.0
+            if '.cache' in fp.as_posix():
+                relevance -= 0.01
             for word in words:
-                if not word.startswith("-") and word not in fp.name:
-                    relevance -= 0.01
+                if not word.startswith("-"):
+                    if word not in fp.name:
+                        relevance -= 0.02
+                else:
+                    if word != fp.name:
+                        relevance -= 0.01
             results += [(
                 file,
                 file,
@@ -75,13 +80,13 @@ class Runner(dbus.service.Object):
         return results[:10]
 
     @dbus.service.method(IFACE, out_signature="a(sss)")
-    def Actions(self):
+    def Actions(self) -> list[tuple[str, str, str]]:
         # pylint: enable=
         # id, text, icon
         return [("id", "Tooltip", "planetkde")]
 
     @dbus.service.method(IFACE, in_signature="ss")
-    def Run(self, data: str, action_id: str):
+    def Run(self, data: str, action_id: str) -> None:
         with suppress(Exception):
             _ = subprocess.Popen(["/usr/bin/xdg-open", data]).pid
 
