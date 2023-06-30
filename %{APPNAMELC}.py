@@ -1,8 +1,9 @@
 #!/usr/bin/python3
-"""A Plasma runner."""
+"""A Plasma runner for the locate command."""
 import re
 import subprocess
 from contextlib import suppress
+from functools import cache
 from pathlib import Path
 
 import dbus.service
@@ -25,8 +26,9 @@ class Runner(dbus.service.Object):
             OBJPATH,
         )
 
+    @cache
     @dbus.service.method(IFACE, in_signature="s", out_signature="a(sssida{sv})")
-    def Match(self, query: str):
+    def Match(self, query: str) -> list[tuple[str, str, str, int, float, dict[str, str]]]:
         """This method is used to get the matches and it returns a list of tuples"""
         # TODO: NoMatch = 0, CompletionMatch = 10, PossibleMatch = 30, InformationalMatch = 50, HelperMatch = 70, ExactMatch = 100
 
@@ -47,7 +49,7 @@ class Runner(dbus.service.Object):
                     self.locate = str(Path(line.rstrip()).expanduser())
         find_cmd = [self.locate, "-l", "100"]
         find_cmd += re.split(r'\s+', query)
-        # q(find_cmd)
+
         find_cmd_result = subprocess.run(find_cmd, capture_output=True, check=False)
         for file in str.split(find_cmd_result.stdout.decode("UTF-8"), "\n"):
             # q(file)
