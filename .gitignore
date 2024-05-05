@@ -6,3 +6,5 @@
 /dist
 /.vscode
 locate.py
+krunner-plugininstallerrc
+locate.desktop
