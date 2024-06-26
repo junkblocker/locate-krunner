@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -exv
+set -euo pipefail
 
 APPNAME="Locate" # One word is better
 export APPNAME
@@ -60,3 +60,4 @@ render "$PROJECTDIR/krunner-plugininstallerrc.template" "$PROJECTDIR/krunner-plu
 command rm -rf ~/.cache/krunner || true
 kquitapp6 krunner >/dev/null 2>&1 || true
 dex-autostart ~/.config/autostart/"${APPNAMELC}_autostart.desktop"
+echo "Done."

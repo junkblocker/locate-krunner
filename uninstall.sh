@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -exv
+set -euo pipefaul
 
 shopt -q -o xtrace && DEBUG=1
 shopt -q -o verbose && VERBOSE=1
@@ -21,3 +21,4 @@ rm -f ~/.config/autostart/"${APPNAMELC:?}_autostart.desktop" || true
 rm -f "$prefix/dbus-1/services/org.kde.${APPNAMELC:?}.service" || true
 pkill -9 "$APPNAMELC.py" || true
 kquitapp6 krunner >/dev/null 2>&1 || true
+echo "Done."
