@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -euo pipefaul
+set -euo pipefail
 
 shopt -q -o xtrace && DEBUG=1
 shopt -q -o verbose && VERBOSE=1
