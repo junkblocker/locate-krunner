@@ -5,6 +5,6 @@ Name=%{APPNAME}
 Comment=Autostart entry for a Krunner plugin
 Keywords=Runner;Krunner
 Categories=Utilities
-Exec=python3 "%{PROJECTDIR}/%{APPNAMELC}.py"
+Exec=/usr/bin/python3 "%{PROJECTDIR}/%{APPNAMELC}.py"
 Icon=planetkde
 StartupNotify=true

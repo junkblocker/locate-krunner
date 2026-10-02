@@ -19,6 +19,6 @@ krunner_dbusdir="$prefix/krunner/dbusplugins"
 rm -f "$krunner_dbusdir/${APPNAMELC:?}.desktop" || true
 rm -f ~/.config/autostart/"${APPNAMELC:?}_autostart.desktop" || true
 rm -f "$prefix/dbus-1/services/org.kde.${APPNAMELC:?}.service" || true
-pkill -9 "$APPNAMELC.py" || true
+# pkill -9 "$APPNAMELC.py" || true
 kquitapp6 krunner >/dev/null 2>&1 || true
 echo "Done."
